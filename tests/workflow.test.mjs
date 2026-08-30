@@ -8,6 +8,7 @@ it("每周采集工作流在北京时间周六十点运行且可手动触发", a
   expect(workflow).toMatch(/cron:\s*["']0 2 \* \* 6["']/);
   expect(workflow).toMatch(/workflow_dispatch:/);
   expect(workflow).toMatch(/node-version:\s*["']20["']/);
+  expect(workflow).toMatch(/pnpm\/action-setup@v\d/);
   expect(workflow).toMatch(/pnpm install --frozen-lockfile/);
   expect(workflow).toMatch(/pnpm crawl/);
   expect(workflow).toMatch(/NEXT_PUBLIC_SUPABASE_URL:\s*\$\{\{ secrets\.NEXT_PUBLIC_SUPABASE_URL \}\}/);
@@ -23,6 +24,7 @@ it("提交到主分支时发布静态 Dashboard", async () => {
 
   expect(workflow).toMatch(/push:/);
   expect(workflow).toMatch(/main/);
+  expect(workflow).toMatch(/pnpm\/action-setup@v\d/);
   expect(workflow).toMatch(/pnpm build/);
   expect(workflow).toMatch(/actions\/deploy-pages@v\d/);
 });
