@@ -34,9 +34,7 @@ jobs:
           cache: pnpm
           cache-dependency-path: pnpm-lock.yaml
       - name: Install dependencies
-        run: |
-          corepack enable
-          pnpm install --frozen-lockfile
+        run: pnpm install --frozen-lockfile
       - name: Configure Pages
         uses: actions/configure-pages@v5
       - name: Build Dashboard
