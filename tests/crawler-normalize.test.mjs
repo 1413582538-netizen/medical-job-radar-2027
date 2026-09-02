@@ -64,6 +64,25 @@ it("以来源岗位 ID 和规范化去重键作为后备匹配", () => {
   expect(findDuplicate([keyMatch], keyCandidate)).toBe(keyMatch);
 });
 
+it("同一来源招聘链接优先合并，即使岗位标题后来变化", () => {
+  const candidate = normalizeCandidate({
+    companyName: "示例医疗",
+    title: "更新后的岗位名称",
+    sourceName: "学校就业网",
+    sourceUrl: "https://career.example/jobs/2027-1",
+  });
+  const sourceUrlMatch = {
+    id: "source-url-match",
+    official_url: null,
+    source_name: "学校就业网",
+    source_job_id: null,
+    source_url: "https://career.example/jobs/2027-1",
+    dedupe_key: "示例医疗|旧岗位名称|深圳",
+  };
+
+  expect(findDuplicate([sourceUrlMatch], candidate)).toBe(sourceUrlMatch);
+});
+
 it("缺少公司、岗位、来源或来源链接时拒绝候选记录", () => {
   expect(() => normalizeCandidate({ companyName: "示例医疗", title: "研发工程师", sourceName: "官网" })).toThrow(/sourceUrl/);
 });

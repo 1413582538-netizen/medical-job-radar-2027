@@ -59,6 +59,9 @@ export function findDuplicate(existingJobs, candidate) {
     if (officialMatch) return officialMatch;
   }
 
+  const sourceUrlMatch = existingJobs.find((existing) => existing.source_url === job.sourceUrl);
+  if (sourceUrlMatch) return sourceUrlMatch;
+
   if (job.sourceJobId) {
     const sourceIdMatch = existingJobs.find(
       (existing) =>

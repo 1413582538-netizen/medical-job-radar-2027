@@ -5,13 +5,20 @@ import { verifiedCandidates } from "./sources/verified-2027-campus.mjs";
 export async function collectCandidates({
   knownCandidates = verifiedCandidates(),
   discoverHust = discoverHustCandidates,
+  sourceAdapters,
 } = {}) {
-  const candidates = [...knownCandidates];
+  const adapters = sourceAdapters ?? [
+    { name: "已验证公开招聘来源", collect: async () => knownCandidates },
+    { name: "华中科技大学就业信息网", collect: discoverHust },
+  ];
+  const candidates = [];
   const sourceErrors = [];
-  try {
-    candidates.push(...await discoverHust());
-  } catch (error) {
-    sourceErrors.push(`华中科技大学就业信息网: ${error instanceof Error ? error.message : String(error)}`);
+  for (const adapter of adapters) {
+    try {
+      candidates.push(...await adapter.collect());
+    } catch (error) {
+      sourceErrors.push(`${adapter.name}: ${error instanceof Error ? error.message : String(error)}`);
+    }
   }
   return { candidates, sourceErrors };
 }

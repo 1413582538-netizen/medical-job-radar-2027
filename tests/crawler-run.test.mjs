@@ -54,3 +54,18 @@ it("实时来源失败时保留已验证来源并把失败带入运行摘要", a
     errorMessage: "华中科技大学就业信息网: source timeout",
   });
 });
+
+it("按来源适配器合并候选记录，并隔离单个来源错误", async () => {
+  const trustedCandidate = { company: { name: "官网企业" }, job: { title: "研发" } };
+  const collected = await collectCandidates({
+    sourceAdapters: [
+      { name: "官网来源", collect: async () => [trustedCandidate] },
+      { name: "补充来源", collect: async () => { throw new Error("temporarily unavailable"); } },
+    ],
+  });
+
+  expect(collected).toEqual({
+    candidates: [trustedCandidate],
+    sourceErrors: ["补充来源: temporarily unavailable"],
+  });
+});
