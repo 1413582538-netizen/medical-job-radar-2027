@@ -59,6 +59,23 @@ describe("华中科技大学就业网实时来源", () => {
     ).toBeNull();
   });
 
+  it("将医学合作专员归类为医学临床方向", () => {
+    const candidate = parseHustDetail(`
+      <h4>字节跳动医疗健康2027届校园招聘</h4>
+      <p>发布时间：2026-09-01</p>
+      <p>医疗AI与数字医疗业务线招聘医学合作专员。</p>
+    `, {
+      sourceUrl: "https://job.hust.edu.cn/zpinfo1/999.htm",
+      sourceJobId: "999",
+      listingTitle: "字节跳动医疗健康2027届校园招聘",
+    }, new Date("2026-09-02T00:00:00+08:00"));
+
+    expect(candidate).toMatchObject({
+      company: { name: "字节跳动医疗健康", industry: "科技医疗业务" },
+      job: { jobDirection: "医学临床" },
+    });
+  });
+
   it("实时发现时去重公告并跳过正文不含目标医疗行业的结果", async () => {
     const calls = [];
     const candidates = await discoverHustCandidates({

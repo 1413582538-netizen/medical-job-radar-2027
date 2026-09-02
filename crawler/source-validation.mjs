@@ -18,10 +18,11 @@ export function isTrustedSourceUrl(value, allowedDomains) {
 
 export function jobDirectionFromText(text) {
   const value = String(text ?? "");
-  if (/注册工程师|注册专员|法规|regulatory/i.test(value)) return "注册法规";
-  if (/医学事务|医学合作|医学专员|临床研究|临床运营|临床项目|临床工程/i.test(value)) return "医学临床";
-  if (/产品经理|产品工程师|产品专员|产品市场/i.test(value)) return "产品";
-  if (/研发|算法|软件|硬件|检测|生命科学/i.test(value)) return "研发";
-  if (/市场|项目管理|项目经理|管培/i.test(value)) return "市场、项目管理";
-  return null;
+  const directions = [];
+  if (/产品经理|产品工程师|产品专员|产品市场/i.test(value)) directions.push("产品");
+  if (/注册工程师|注册专员|法规|regulatory/i.test(value)) directions.push("注册法规");
+  if (/研发|算法|软件|硬件|检测|生命科学(?:研发|工程师)/i.test(value)) directions.push("研发");
+  if (/医学事务|医学合作|医学专员|临床研究|临床运营|临床项目|临床工程/i.test(value)) directions.push("医学临床");
+  if (/市场|项目管理|项目经理|管培/i.test(value)) directions.push("市场、项目管理");
+  return directions.join("、") || null;
 }

@@ -1,4 +1,6 @@
 import { normalizeCandidate } from "../normalize.mjs";
+import { has2027CampusSignal, jobDirectionFromText } from "../source-validation.mjs";
+import { findEnterprise } from "./enterprise-catalog.mjs";
 
 const HUST_BASE_URL = "https://job.hust.edu.cn";
 
@@ -34,16 +36,6 @@ function classifyIndustry(text) {
   return null;
 }
 
-function jobDirectionFromText(text) {
-  const labels = [];
-  if (/产品经理|产品工程师|产品专员|产品市场/i.test(text)) labels.push("产品");
-  if (/注册工程师|注册专员|法规|Regulatory Affairs/i.test(text)) labels.push("注册法规");
-  if (/研发工程师|研发方向|技术研发|研发管培|研发(?:、|，|。|\s|$)/i.test(text)) labels.push("研发");
-  if (/医学事务|医学专员|临床研究|临床运营|临床项目|临床研究工程师/i.test(text)) labels.push("医学临床");
-  if (/市场|项目管理|项目经理/i.test(text)) labels.push("市场、项目管理");
-  return labels.join("、") || "其他";
-}
-
 function publishedAtFromText(text) {
   const match = text.match(/发布时间\s*[：:]?\s*(20\d{2})[-年/.](\d{1,2})[-月/.](\d{1,2})/);
   if (!match) return null;
@@ -73,15 +65,18 @@ export function parseHustListing(html) {
 export function parseHustDetail(html, listing, now = new Date()) {
   const text = textFromHtml(html);
   const publishedAt = publishedAtFromText(text);
-  const companyName = companyNameFromListingTitle(listing.listingTitle);
-  const industry = classifyIndustry(text);
-  if (!companyName || !industry || !isWithinThirtyDays(publishedAt, now)) return null;
+  const detectedCompanyName = companyNameFromListingTitle(listing.listingTitle);
+  const enterprise = findEnterprise(detectedCompanyName);
+  const companyName = enterprise?.name ?? detectedCompanyName;
+  const industry = enterprise?.industry ?? classifyIndustry(text);
+  const jobDirection = jobDirectionFromText(text);
+  if (!companyName || !industry || !jobDirection || !has2027CampusSignal(listing.listingTitle) || !isWithinThirtyDays(publishedAt, now)) return null;
 
   return normalizeCandidate({
     companyName,
     companyIndustry: industry,
     title: "2027届校园招聘",
-    jobDirection: jobDirectionFromText(text),
+    jobDirection,
     industry,
     sourceName: "华中科技大学就业信息网",
     sourceUrl: listing.sourceUrl,
@@ -104,7 +99,7 @@ export async function discoverHustCandidates({
     const response = await fetchImpl(searchUrl);
     if (!response.ok) throw new Error(`华中科技大学就业网搜索失败 (${response.status})`);
     for (const listing of parseHustListing(await response.text())) {
-      if (/2027\s*(?:届)?(?:秋季)?(?:校园)?(?:招聘|校招)|2027秋招/i.test(listing.listingTitle)) {
+      if (has2027CampusSignal(listing.listingTitle)) {
         listings.set(listing.sourceUrl, listing);
       }
     }
