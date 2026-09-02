@@ -8,6 +8,7 @@ import {
 
 it("只接受 2027 届信息并识别用户相关岗位方向", () => {
   expect(has2027CampusSignal("2027届校园招聘 医学合作专员")).toBe(true);
+  expect(has2027CampusSignal("面向 2027届毕业生的研发实习岗位")).toBe(true);
   expect(has2027CampusSignal("社会招聘 产品经理")).toBe(false);
   expect(jobDirectionFromText("医学合作专员（医疗健康业务）")).toBe("医学临床");
   expect(jobDirectionFromText("化妆品柜台销售")).toBeNull();

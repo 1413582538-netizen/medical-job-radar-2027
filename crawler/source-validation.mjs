@@ -1,4 +1,4 @@
-const CAMPUS_PATTERN = /2027\s*(?:届|级)?(?:秋季)?(?:校园)?(?:招聘|校招)|2027秋招|2027校园招聘|2027\s*graduate/i;
+const CAMPUS_PATTERN = /2027\s*(?:届|级)|2027\s*(?:秋季)?(?:校园)?(?:招聘|校招)|2027秋招|2027校园招聘|2027\s*graduate/i;
 
 export function has2027CampusSignal(text) {
   return CAMPUS_PATTERN.test(String(text ?? ""));

@@ -1,4 +1,5 @@
 import { normalizeCandidate } from "../normalize.mjs";
+import { curated2027CampusCandidates } from "./curated-2027-campus.mjs";
 
 const NEW_INDUSTRY_SOURCE = "https://job.hust.edu.cn/zpinfo1/2407428.htm";
 const NEW_INDUSTRY = {
@@ -70,5 +71,5 @@ const RAW_CANDIDATES = [
 ];
 
 export function verifiedCandidates() {
-  return RAW_CANDIDATES.map(normalizeCandidate);
+  return [...RAW_CANDIDATES.map(normalizeCandidate), ...curated2027CampusCandidates()];
 }
