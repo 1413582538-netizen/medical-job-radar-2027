@@ -29,4 +29,8 @@ it("收录指定的大健康企业及其别名", () => {
     name: "深圳麦科田生物医疗技术股份有限公司",
     industry: "医疗器械",
   });
+  expect(findEnterprise("南京巨鲨显示科技有限公司")).toMatchObject({
+    name: "巨鲨医疗",
+    industry: "医疗器械 / 医学影像",
+  });
 });

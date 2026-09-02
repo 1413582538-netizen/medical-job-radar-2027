@@ -89,5 +89,9 @@ export function curated2027CampusCandidates() {
   return CURATED_CANDIDATES
     .filter((candidate) => has2027CampusSignal(candidate.title))
     .filter((candidate) => isTrustedSourceUrl(candidate.sourceUrl, candidate.allowedDomains))
-    .map(({ allowedDomains, ...candidate }) => normalizeCandidate(candidate));
+    .map((candidate) => {
+      const normalizedInput = { ...candidate };
+      delete normalizedInput.allowedDomains;
+      return normalizeCandidate(normalizedInput);
+    });
 }

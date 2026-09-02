@@ -50,7 +50,7 @@ export const ENTERPRISE_CATALOG = Object.freeze([
   }),
   enterprise({
     name: "巨鲨医疗",
-    aliases: ["巨鲨显示", "Jusha"],
+    aliases: ["巨鲨显示", "南京巨鲨显示科技有限公司", "Jusha"],
     industry: "医疗器械 / 医学影像",
   }),
   enterprise({
