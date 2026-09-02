@@ -16,6 +16,7 @@ it("每周采集工作流在北京时间周六十点运行且可手动触发", a
   expect(workflow).toMatch(/SUPABASE_SERVICE_ROLE_KEY:\s*\$\{\{ secrets\.SUPABASE_SERVICE_ROLE_KEY \}\}/);
   expect(workflow).toMatch(/NEXT_PUBLIC_SUPABASE_ANON_KEY:\s*\$\{\{ secrets\.NEXT_PUBLIC_SUPABASE_ANON_KEY \}\}/);
   expect(workflow).toMatch(/actions\/configure-pages@v\d/);
+  expect(workflow).toMatch(/enablement:\s*true/);
   expect(workflow).toMatch(/actions\/upload-pages-artifact@v\d/);
   expect(workflow).toMatch(/actions\/deploy-pages@v\d/);
 });
@@ -28,5 +29,6 @@ it("提交到主分支时发布静态 Dashboard", async () => {
   expect(workflow).toMatch(/pnpm\/action-setup@v\d/);
   expect(workflow).not.toMatch(/corepack enable/);
   expect(workflow).toMatch(/pnpm build/);
+  expect(workflow).toMatch(/enablement:\s*true/);
   expect(workflow).toMatch(/actions\/deploy-pages@v\d/);
 });
