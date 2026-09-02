@@ -15,5 +15,6 @@ describe("项目密钥保护", () => {
   it("不对已生成的静态发布文件重复执行源码检查", async () => {
     const lintConfig = await readFile(resolve("eslint.config.mjs"), "utf8");
     expect(lintConfig).toMatch(/"out\/\*\*"/);
+    expect(lintConfig).toMatch(/"\*\*\/\.worktrees\/\*\*"/);
   });
 });
