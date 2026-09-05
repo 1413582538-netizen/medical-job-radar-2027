@@ -27,3 +27,31 @@ it("补充近期可核验的目标企业 2027 招聘记录", () => {
   ]));
   expect(candidates.every((candidate) => candidate.job.sourceUrl.startsWith("https://"))).toBe(true);
 });
+
+it("收录本周新发现的医药和医疗器械 2027 校招来源", () => {
+  const candidates = verifiedCandidates();
+
+  expect(candidates).toEqual(expect.arrayContaining([
+    expect.objectContaining({
+      company: expect.objectContaining({ name: "罗氏制药中国" }),
+      job: expect.objectContaining({
+        title: "2027届 StartUp 人才发展项目（医学路径）",
+        sourceUrl: "https://careers.roche.com/cn/zh/startup-china-pharma",
+      }),
+    }),
+    expect.objectContaining({
+      company: expect.objectContaining({ name: "甘李药业股份有限公司" }),
+      job: expect.objectContaining({
+        title: "2027届校园招聘（研究、开发、营销、运营）",
+        sourceUrl: "https://jy.tust.edu.cn/correcruit/content/id/46291.html",
+      }),
+    }),
+    expect.objectContaining({
+      company: expect.objectContaining({ name: "BMC瑞迈特" }),
+      job: expect.objectContaining({
+        title: "2027届校园招聘",
+        sourceUrl: "https://career.nankai.edu.cn/correcruit/content/id/117304.html",
+      }),
+    }),
+  ]));
+});
